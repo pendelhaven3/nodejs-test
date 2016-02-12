@@ -11,7 +11,7 @@
 		<th>Class</th>
 		<th>Level</th>
 	</tr>
-	<tr data-ng-repeat="user in users">
+	<tr data-ng-repeat="user in users" data-ng-click="selectUser(user)">
 		<td>{{user.name}}</td>
 		<td>{{user.class}}</td>
 		<td>{{user.level}}</td>
@@ -37,7 +37,7 @@ app.controller('MyController', function($scope, $http) {
     $scope.user = {};
     
     var listUsers = function() {
-		$http.get('user').then(
+		$http.get('users').then(
 			function(response) {
 				$scope.users = response.data;
 			},
@@ -49,7 +49,7 @@ app.controller('MyController', function($scope, $http) {
     }
 
 	$scope.saveUser = function() {
-	    $http.post('user', $scope.user).then(
+	    $http.post('users', $scope.user).then(
 		    function(response) {
 				listUsers();
 		    },
@@ -61,7 +61,7 @@ app.controller('MyController', function($scope, $http) {
 	}
 	
 	$scope.deleteUser = function(user) {
-	    $http.delete('user/' + user.name).then(
+	    $http.delete('users/' + user.name).then(
 		    function(response) {
 				listUsers();
 		    },
