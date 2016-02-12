@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html data-ng-app="MyApp">
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+</head>
+<body data-ng-controller="MyController">
+
+<table>
+	<tr>
+		<th>Name</th>
+		<th>Class</th>
+		<th>Level</th>
+	</tr>
+	<tr data-ng-repeat="user in users">
+		<td>{{user.name}}</td>
+		<td>{{user.class}}</td>
+		<td>{{user.level}}</td>
+		<td><a href="javascript:void(0)" data-ng-click="deleteUser(user)">Delete</a></td>
+	</tr>
+</table>
+
+<div>
+Name: <input type="text" data-ng-model="user.name" />
+</div>
+<div>
+Class: <input type="text" data-ng-model="user.class" />
+</div>
+<div>
+Level: <input type="text" data-ng-model="user.level" />
+</div>
+
+<button data-ng-click="saveUser()">Save</button>
+
+<script>
+var app = angular.module('MyApp', []);
+app.controller('MyController', function($scope, $http) {
+    $scope.user = {};
+    
+    var listUsers = function() {
+		$http.get('user').then(
+			function(response) {
+				$scope.users = response.data;
+			},
+			function(response) {
+				alert('error');
+				console.log(response);
+			}
+		);
+    }
+
+	$scope.saveUser = function() {
+	    $http.post('user', $scope.user).then(
+		    function(response) {
+				listUsers();
+		    },
+		    function(response) {
+				alert('error');
+				console.log(response);
+		    }
+	    );
+	}
+	
+	$scope.deleteUser = function(user) {
+	    $http.delete('user/' + user.name).then(
+		    function(response) {
+				listUsers();
+		    },
+		    function(response) {
+				alert('error');
+				console.log(response);
+		    }
+	    );
+	}
+	
+	listUsers();
+});
+</script>
+
+</body>
+</html>
