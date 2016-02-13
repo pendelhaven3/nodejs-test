@@ -1,8 +1,9 @@
 module.exports = function(app){
-    var users = require('./users');
-    app.get('/users', users.findAll);
-    app.get('/users/:id', users.findById);
-    app.post('/users', users.add);
-    app.put('/users/:name', users.update);
-    app.delete('/users/:name', users.delete);
+    var characters = require('./controllers/characters.js');
+    app.get('/character', characters.findAll);
+    app.get('/character/:id', characters.findById);
+    app.post('/character', characters.add);
+    app.put('/character/:id', characters.update);
+    app.delete('/character/:id', characters.delete);
+    app.get('/import', characters.import);
 }

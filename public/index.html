@@ -11,35 +11,39 @@
 		<th>Class</th>
 		<th>Level</th>
 	</tr>
-	<tr data-ng-repeat="user in users" data-ng-click="selectUser(user)">
-		<td>{{user.name}}</td>
-		<td>{{user.class}}</td>
-		<td>{{user.level}}</td>
-		<td><a href="javascript:void(0)" data-ng-click="deleteUser(user)">Delete</a></td>
+	<tr data-ng-repeat="character in characters" data-ng-click="selectCharacter(character)">
+		<td>{{character.name}}</td>
+		<td>{{character.class}}</td>
+		<td>{{character.level}}</td>
+		<td><a href="javascript:void(0)" data-ng-click="selectCharacter(character)">Edit</a></td>
+		<td><a href="javascript:void(0)" data-ng-click="deleteCharacter(character)">Delete</a></td>
 	</tr>
 </table>
 
+<input type="hidden" data-ng-model="character._id" />
+
 <div>
-Name: <input type="text" data-ng-model="user.name" />
+Name: <input type="text" data-ng-model="character.name" />
 </div>
 <div>
-Class: <input type="text" data-ng-model="user.class" />
+Class: <input type="text" data-ng-model="character.class" />
 </div>
 <div>
-Level: <input type="text" data-ng-model="user.level" />
+Level: <input type="text" data-ng-model="character.level" />
 </div>
 
-<button data-ng-click="saveUser()">Save</button>
+<button data-ng-click="saveCharacter()">Save</button>
+<button data-ng-click="clear()">Clear</button>
 
 <script>
 var app = angular.module('MyApp', []);
 app.controller('MyController', function($scope, $http) {
-    $scope.user = {};
+    $scope.character = {};
     
-    var listUsers = function() {
-		$http.get('users').then(
+    var listCharacters = function() {
+		$http.get('character').then(
 			function(response) {
-				$scope.users = response.data;
+				$scope.characters = response.data;
 			},
 			function(response) {
 				alert('error');
@@ -48,10 +52,14 @@ app.controller('MyController', function($scope, $http) {
 		);
     }
 
-	$scope.saveUser = function() {
-	    $http.post('users', $scope.user).then(
+	$scope.saveCharacter = function() {
+	    var url = 'character';
+	    if ($scope.character._id) {
+			url += '/' + $scope.character._id;
+	    }
+	    $http.post(url, $scope.character).then(
 		    function(response) {
-				listUsers();
+				listCharacters();
 		    },
 		    function(response) {
 				alert('error');
@@ -60,10 +68,10 @@ app.controller('MyController', function($scope, $http) {
 	    );
 	}
 	
-	$scope.deleteUser = function(user) {
-	    $http.delete('users/' + user.name).then(
+	$scope.deleteCharacter = function(character) {
+	    $http.delete('character/' + character._id).then(
 		    function(response) {
-				listUsers();
+				listCharacters();
 		    },
 		    function(response) {
 				alert('error');
@@ -72,7 +80,15 @@ app.controller('MyController', function($scope, $http) {
 	    );
 	}
 	
-	listUsers();
+	$scope.selectCharacter = function(character) {
+	    $scope.character = character;
+	}
+	
+	$scope.clear = function() {
+	    $scope.characater = null;
+	}
+	
+	listCharacters();
 });
 </script>
 
